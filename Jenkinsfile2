@@ -13,6 +13,13 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to Staging Environment'){
+            steps{
+                build job: 'deploy-application-staging-environment-pipeline'
+
+            }
+            
+        }
 
         stage('Deploy to Production Environment'){
             steps{
