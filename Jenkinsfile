@@ -3,13 +3,25 @@ pipeline {
     stages {
         stage('Build Application') {
             steps {
-                sh 'mvn -f pom.xml clean package'
+                build job: 'build-web-application'
             }
-            post {
-                success {
-                    echo "Now Archiving the Artifacts....."
-                    archiveArtifacts artifacts: '**/*.war'
+
+        }
+        
+        stage('Deploy to Staging Environment'){
+            steps{
+                build job: 'Deploy-Application-Staging-Environment'
+
+            }
+            
+        }
+
+        stage('Deploy to Production Environment'){
+            steps{
+                timeout(time:5, unit:'DAYS'){
+                    input message:'Approve PRODUCTION Deployment?'
                 }
+                build job: 'Deploy-Application-Production-Environment'
             }
         }
     }
